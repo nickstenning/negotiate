@@ -1,0 +1,68 @@
+negotiate
+=========
+
+Smart, simple content negotiation for Python web applications.
+
+Content negotiation can be difficult to do well. Ideally, your code should be
+DRY, and you wouldn't be repeating the same old boilerplate before in order to
+emit the same domain object in different formats. ``negotiate`` helps make
+your life even easier by allowing you to decorate your view methods with
+formatters that automatically detect the format requested by the user or
+browser.
+
+If that sounds complicated, hopefully this example (for a Flask application)
+will clear things up:
+
+```python
+# First, we write a couple of formatters that specify how to translate the
+# output of the view function into a particular format. Here we define a
+# JSON formatter and an HTML formatter that takes a template parameter.
+
+from negotiate.flask import Formatter
+
+class JSONFormatter(Formatter):
+    format = 'json'
+    mimetypes = ['application/json']
+
+    def render(self, obj):
+        return json.dumps(obj)
+
+class HTMLFormatter(Formatter):
+    format = 'json'
+    mimetypes = ['text/html']
+
+    def configure(self, template):
+        self.template = template
+
+    def render(self, obj):
+        return render(self.template, **obj)
+
+...
+
+# Then, when building the application, we decorate the view function with
+# using the "negotiate" decorator, listing the formats in which this view
+# is available.
+
+from negotiate.flask import negotiate
+
+@app.route('/posts/<id>')
+@app.route('/posts/<id>.<format>')
+@negotiate(JSONFormatter)
+@negotiate(HTMLFormatter, template='post.html')
+def view_post(id, format=None):
+    post = Posts.by_id(id)
+
+    if post is None:
+        abort(404)
+    if not g.user.authorize('read', post):
+        abort(401)
+
+    return {'post': post}
+```
+
+The result is a view action that will return an HTML version of the post by default (i.e. with `Accept: */*` and no explicit format), or if the `.html` extension is explicitly specified, or a JSON version of the post if the `.json` extension is given or `Accept: application/json` is send with the request.
+
+Support
+-------
+
+`negotiate` currently supports [Flask](http://flask.pocoo.org) and [Pylons](http://pylonshq.com), although adding support for other web frameworks should be pretty easy. Have a look at `negotiate/flask.py` and `negotiate/pylons.py` to see the small amount of integration code required.
