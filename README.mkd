@@ -4,14 +4,14 @@ negotiate
 Smart, simple content negotiation for Python web applications.
 
 Content negotiation can be difficult to do well. Ideally, your code should be
-DRY, and you wouldn't be repeating the same old boilerplate before in order to
-emit the same domain object in different formats. ``negotiate`` helps make
-your life even easier by allowing you to decorate your view methods with
-formatters that automatically detect the format requested by the user or
-browser.
+DRY, and you wouldn't be repeating the same old boilerplate in multiple view
+methods in order to emit the same domain object in different formats.
+``negotiate`` helps make your life even easier by allowing you to decorate
+your view methods with formatters that automatically translate your domain
+objects into the format requested by the client.
 
-If that sounds complicated, hopefully this example (for a Flask application)
-will clear things up:
+It's really simple to use. Hopefully this example (for a Flask application)
+makes the main points clear:
 
 ```python
 # First, we write a couple of formatters that specify how to translate the
@@ -36,8 +36,6 @@ class HTMLFormatter(Formatter):
 
     def render(self, obj):
         return render(self.template, **obj)
-
-...
 
 # Then, when building the application, we decorate the view function with
 # using the "negotiate" decorator, listing the formats in which this view
