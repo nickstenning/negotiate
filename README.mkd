@@ -57,7 +57,7 @@ def view_post(id, format=None):
     return {'post': post}
 ```
 
-The result is a view action that will return an HTML version of the post by default (i.e. with `Accept: */*` and no explicit format), or if the `.html` extension is explicitly specified, or a JSON version of the post if the `.json` extension is given or `Accept: application/json` is send with the request.
+The result is a view action that will return an HTML version of the post by default (i.e. with `Accept: */*` and no explicit format), or if the `.html` extension is explicitly specified, or a JSON version of the post if the `.json` extension is given or `Accept: application/json` is sent with the request.
 
 Support
 -------
