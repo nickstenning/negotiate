@@ -37,9 +37,8 @@ class HTMLFormatter(Formatter):
     def render(self, obj):
         return render(self.template, **obj)
 
-# Then, when building the application, we decorate the view function with
-# using the "negotiate" decorator, listing the formats in which this view
-# is available.
+# Then, when building the application, we decorate the view function with the
+# "negotiate" decorator, listing the formats in which this view is available.
 
 from negotiate.flask import negotiate
 
