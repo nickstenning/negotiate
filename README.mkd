@@ -28,14 +28,14 @@ class JSONFormatter(Formatter):
         return json.dumps(obj)
 
 class HTMLFormatter(Formatter):
-    format = 'json'
+    format = 'html'
     mimetypes = ['text/html']
 
     def configure(self, template):
         self.template = template
 
     def render(self, obj):
-        return render(self.template, **obj)
+        return render_template(self.template, **obj)
 
 # Then, when building the application, we decorate the view function with the
 # "negotiate" decorator, listing the formats in which this view is available.
